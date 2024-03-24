@@ -49,7 +49,7 @@ def clean_url(url):
         str: Cleaned URL.
     """
     parsed_url = urlparse(url)
-    
+
     if (parsed_url.port == 80 and parsed_url.scheme == "http") or (parsed_url.port == 443 and parsed_url.scheme == "https"):
         parsed_url = parsed_url._replace(netloc=parsed_url.netloc.rsplit(":", 1)[0])
 
@@ -90,18 +90,18 @@ def fetch_and_clean_urls(domain, extensions, stream_output,proxy, placeholder):
     Returns:
         None
     """
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Fetching URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Fetching URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
     wayback_uri = f"https://web.archive.org/cdx/search/cdx?url={domain}/*&output=txt&collapse=urlkey&fl=original&page=/"
     response = client.fetch_url_content(wayback_uri,proxy)
     urls = response.text.split()
-    
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Found {Fore.GREEN + str(len(urls)) + Style.RESET_ALL} URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
-    
+
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Found {Fore.GREEN + str(len(urls)) + Style.RESET_ALL} URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
+
     cleaned_urls = clean_urls(urls, extensions, placeholder)
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Cleaning URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Found {Fore.GREEN + str(len(cleaned_urls)) + Style.RESET_ALL} URLs after cleaning")
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Extracting URLs with parameters")
-    
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Cleaning URLs for {Fore.CYAN + domain + Style.RESET_ALL}")
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Found {Fore.GREEN + str(len(cleaned_urls)) + Style.RESET_ALL} URLs after cleaning")
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Extracting URLs with parameters")
+
     results_dir = "results"
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
@@ -114,24 +114,15 @@ def fetch_and_clean_urls(domain, extensions, stream_output,proxy, placeholder):
                 f.write(url + "\n")
                 if stream_output:
                     print(url)
-    
-    logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Saved cleaned URLs to {Fore.CYAN + result_file + Style.RESET_ALL}")
+
+   # logging.info(f"{Fore.YELLOW}[INFO]{Style.RESET_ALL} Saved cleaned URLs to {Fore.CYAN + result_file + Style.RESET_ALL}")
 
 def main():
     """
     Main function to handle command-line arguments and start URL mining process.
     """
-    log_text = """
-           
-                                      _    __       
-   ___  ___ ________ ___ _  ___ ___  (_)__/ /__ ____
-  / _ \/ _ `/ __/ _ `/  ' \(_-</ _ \/ / _  / -_) __/
- / .__/\_,_/_/  \_,_/_/_/_/___/ .__/_/\_,_/\__/_/   
-/_/                          /_/                    
-
-                              with <3 by @0xasm0d3us           
-    """
-    colored_log_text = f"{yellow_color_code}{log_text}{reset_color_code}"
+    print("finding more urls from paramspider...")
+    colored_log_text = f"{yellow_color_code}{reset_color_code}"
     print(colored_log_text)
     parser = argparse.ArgumentParser(description="Mining URLs from dark corners of Web Archives ")
     parser.add_argument("-d", "--domain", help="Domain name to fetch related URLs for.")
